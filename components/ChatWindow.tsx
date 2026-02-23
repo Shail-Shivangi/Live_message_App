@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
-
+import { formatMessageTime } from "../lib/formatTime";
 export default function ChatWindow({ conversationId }: any) {
   const { user } = useUser();
   const users = useQuery(api.users.getUsers);
@@ -31,19 +31,23 @@ export default function ChatWindow({ conversationId }: any) {
     <div className="flex-1 flex flex-col">
       <div className="flex-1 p-4 overflow-y-auto">
         {messages?.map((msg) => (
-          <div
-            key={msg._id}
-            className={`mb-2 ${
-              msg.senderId === currentUser?._id
-                ? "text-right"
-                : "text-left"
-            }`}
-          >
-            <span className="bg-blue-500 text-white px-3 py-1 rounded-lg">
-              {msg.body}
-            </span>
-          </div>
-        ))}
+  <div
+    key={msg._id}
+    className={`mb-3 ${
+      msg.senderId === currentUser?._id
+        ? "text-right"
+        : "text-left"
+    }`}
+  >
+    <div className="inline-block bg-blue-500 text-white px-3 py-2 rounded-lg">
+      <div>{msg.body}</div>
+
+      <div className="text-xs text-gray-200 mt-1 text-right">
+        {formatMessageTime(msg.createdAt)}
+      </div>
+    </div>
+  </div>
+))}
       </div>
 
       <div className="p-4 flex gap-2">
