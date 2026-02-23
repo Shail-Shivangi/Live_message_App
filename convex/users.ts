@@ -10,7 +10,9 @@ export const createUser = mutation({
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("users")
-      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", args.clerkId)
+      )
       .unique();
 
     if (!existing) {
