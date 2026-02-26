@@ -6,23 +6,26 @@ export const createUser = mutation({
     clerkId: v.string(),
     name: v.string(),
     image: v.string(),
-    online: v.boolean(),
-    lastSeen: v.number(),
-    updatedAt: v.number(),
+    online: v.boolean(),     // Add this
+    lastSeen: v.number(),    // Add this
+    updatedAt: v.number(),   // Add this
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("users")
-      .filter((q) =>
-        q.eq(q.field("clerkId"), args.clerkId)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", args.clerkId)
       )
-      .first();
+      .unique();
 
-    if (existing) return existing._id;
-
-    return await ctx.db.insert("users", args);
+    if (!existing) {
+      await ctx.db.insert("users", {
+        ...args, // Now 'args' includes all the fields
+      });
+    }
   },
 });
+
 export const getUsers = query({
   handler: async (ctx) => {
     return await ctx.db.query("users").collect();

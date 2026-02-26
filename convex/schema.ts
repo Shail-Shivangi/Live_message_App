@@ -1,21 +1,22 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+// convex/schema.ts
 export default defineSchema({
   users: defineTable({
-  clerkId: v.string(),
-  name: v.string(),
-  image: v.string(),
-  online: v.boolean(),
-  lastSeen: v.optional(v.number()),
-  updatedAt: v.number(),
-}).index("by_clerkId", ["clerkId"]),
-
+    clerkId: v.string(),
+    name: v.string(),
+    image: v.string(),
+    online: v.optional(v.boolean()),    // Added v.optional
+    lastSeen: v.optional(v.number()),   // Added v.optional
+    updatedAt: v.optional(v.number()), // Added v.optional
+  }).index("by_clerkId", ["clerkId"]),
+ 
   conversations: defineTable({
   members: v.array(v.id("users")),
   isGroup: v.boolean(),
   name: v.optional(v.string()),
-  updatedAt: v.number(),
+  updatedAt: v.optional(v.number()),
 }),
 
  messages: defineTable({
@@ -31,7 +32,7 @@ export default defineSchema({
 typing: defineTable({
   userId: v.id("users"),
   conversationId: v.id("conversations"),
-  updatedAt: v.number(),
+  updatedAt: v.optional(v.number()),
 })
 .index("by_user_conversation", ["userId", "conversationId"])
 .index("by_conversation", ["conversationId","userId"]),

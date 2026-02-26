@@ -67,6 +67,6 @@ export const getTypingUsers = query({
       .collect();
 
     // Only show users typing in the last 5 seconds
-    return records.filter((r) => now - r.updatedAt < 5000);
+    return records.filter((r) => now - (r.updatedAt ?? 0) < 5000);
   },
 });

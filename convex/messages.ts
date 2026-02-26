@@ -17,6 +17,9 @@ export const sendMessage = mutation({
       // 🔥 IMPORTANT
       readBy: [args.senderId],
     });
+    await ctx.db.patch(args.conversationId, {
+      updatedAt: Date.now(),
+    });
   },
 });
 
